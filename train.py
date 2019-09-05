@@ -105,25 +105,26 @@ def main(params):
                 triplet_loss_i_i, triplet_loss_t_t, triplet_loss_i_t, triplet_loss_t_i = triplet_hashing_loss(image_embeddings, text_embeddings, labels, margin=params.triplet_margin)
                 logger.info('Batch %i/%i: loss_image_image: %f\t||\tloss_text_text: %f\t||\tloss_image_text: %f\t||\tloss_text_image: %f' % (index + 1, 
                 total_batches, triplet_loss_i_i.item(), triplet_loss_t_t.item(), triplet_loss_i_t.item(), triplet_loss_t_i.item()))
-                # total_loss = triplet_loss_i_i + triplet_loss_i_t + triplet_loss_t_i + triplet_loss_i_t
-                # total_loss_value += total_loss.item()
-                total_loss_i_i += triplet_loss_i_i.item()
-                total_loss_t_t += triplet_loss_t_t.item()
-                total_loss_i_t += triplet_loss_i_t.item()
-                total_loss_t_i += triplet_loss_t_i.item()
+                total_loss = triplet_loss_i_i + triplet_loss_i_t + triplet_loss_t_i + triplet_loss_i_t
+                total_loss_value += total_loss.item()
+                # total_loss_i_i += triplet_loss_i_i.item()
+                # total_loss_t_t += triplet_loss_t_t.item()
+                # total_loss_i_t += triplet_loss_i_t.item()
+                # total_loss_t_i += triplet_loss_t_i.item()
 
                 count +=1 
                 # writer.add_scalar('train_image_image', triplet_loss.item(), index + epoch * params.batch_size)
-                triplet_loss_i_i.backward(retain_graph=True)
-                image_optimizer.step()
-                text_optimizer.step()
-                triplet_loss_t_t.backward(retain_graph=True)
-                image_optimizer.step()
-                text_optimizer.step()
-                triplet_loss_i_t.backward(retain_graph=True)
-                image_optimizer.step()
-                text_optimizer.step()
-                triplet_loss_t_i.backward(retain_graph=False)
+                # triplet_loss_i_i.backward(retain_graph=True)
+                # image_optimizer.step()
+                # text_optimizer.step()
+                # triplet_loss_t_t.backward(retain_graph=True)
+                # image_optimizer.step()
+                # text_optimizer.step()
+                # triplet_loss_i_t.backward(retain_graph=True)
+                # image_optimizer.step()
+                # text_optimizer.step()
+                # triplet_loss_t_i.backward(retain_graph=False)
+                total_loss.backward()
                 image_optimizer.step()
                 text_optimizer.step()
 
@@ -137,7 +138,7 @@ def main(params):
                     max_map = avg_mAP
                     save_model(Image_encoder, Text_encoder, params.save_best)
                 save_model(Image_encoder, Text_encoder, params.save_path)
-            logger.info('\nEpoch %i: avg loss_i_i: %f||\tavg loss_t_t: %f||\tavg loss_i_t: %f||\tavg loss_t_i: %f\n' % (epoch, total_loss_i_i / count, total_loss_t_t / count, total_loss_i_t / count, total_loss_t_i / count))
+            logger.info('\nEpoch %i: total_avg_loss: %f||\tavg loss_i_i: %f||\tavg loss_t_t: %f||\tavg loss_i_t: %f||\tavg loss_t_i: %f\n' % (epoch, total_loss_value / count, total_loss_i_i / count, total_loss_t_t / count, total_loss_i_t / count, total_loss_t_i / count))
     
     if params.eval_only:
         logger.info('Start Testing')
