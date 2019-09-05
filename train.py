@@ -46,7 +46,7 @@ def get_parser():
                         help='margin when calculate triplet loss')
     parser.add_argument('--lang', type=str, default='en',
                         help='choose language of the text')
-    parser.add_argument('--params.bertmodel_dir', type=str, default='/home/disk1/chengqinyuan/pretrain_bert/bert-base-uncased-pytorch_model.bin',
+    parser.add_argument('--bertmodel_dir', type=str, default='/home/disk1/chengqinyuan/pretrain_bert/bert-base-uncased-pytorch_model.bin',
                         help='bert pretrain model location')
     
     return parser
