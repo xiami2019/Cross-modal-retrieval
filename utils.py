@@ -126,29 +126,13 @@ def label_equal_mask(all_labels, label):
     
     return mask
 
-def ndarray2str(ndarray):
-    '''
-    change an ndarray to a string
-    '''
-    result_str = ''
-    for i in range(len(ndarray)):
-        result_str += str(int(ndarray[i]))
-
-    return result_str
-
 def get_triplets(labels):
     '''
     get triplet for training
     '''
     triplets = []
-    temp_set = set()
     for label in labels:
-        temp_str = ndarray2str(label)
-        if temp_str in temp_set:
-            continue
-        else:
-            temp_set.add(temp_str)
-        label_mask = label_equal_mask(labels, label)
+        label_mask = np.matmul(labels, np.transpose(label)) > 0
         label_indices = np.where(label_mask)[0]
         if len(label_indices) < 2:
             continue
@@ -196,13 +180,6 @@ def cal_result(data_loarder, Image_encoder, Text_encoder, params):
 
     return torch.sign(torch.cat(binary_code_image)), torch.sign(torch.cat(binary_code_text)), torch.cat(total_labels)
 
-def get_correct(query_label, trn_labels):
-    result = torch.tensor([0] * len(trn_labels))
-    for i in range(len(trn_labels)):
-        if trn_labels[i].mul(query_label).sum(0) != 0:
-            result[i] = 1
-    return result.float()
-
 def compute_mAP(trn_binary, tst_binary, trn_label, tst_label):
     """
     compute mAP by searching testset from trainset
@@ -216,8 +193,7 @@ def compute_mAP(trn_binary, tst_binary, trn_label, tst_label):
     for i in range(tst_binary.size(0)):
         query_label, query_binary = tst_label[i], tst_binary[i]
         _, query_result = torch.sum((query_binary != trn_binary).long(), dim=1).sort()
-        correct = get_correct(query_label, trn_label[query_result])
-        # correct = (query_label == trn_label[query_result]).float()
+        correct = ((trn_label[query_result]*query_label).sum(1) > 0).float()
         P = torch.cumsum(correct.type(torch.FloatTensor), dim=0) / Ns
         AP.append(torch.sum(P * correct) / torch.sum(correct))
     mAP = torch.mean(torch.Tensor(AP))
@@ -248,19 +224,10 @@ def eval_all(database, querys, Image_encoder, Text_encoder, params, logger):
     train_binary_image, train_binary_text, train_labels = cal_result(database, Image_encoder, Text_encoder, params)
     test_binary_image, test_binary_text, test_labels = cal_result(querys, Image_encoder, Text_encoder, params)
 
-    mAP_i_i = float(compute_mAP(train_binary_image, test_binary_image, train_labels, test_labels))
-    logger.info('mAP_image_image: %f' % mAP_i_i)
-
-    mAP_t_t = float(compute_mAP(train_binary_text, test_binary_text, train_labels, test_labels))
-    logger.info('mAP_text_text: %f' % mAP_t_t)
-
-    mAP_i_t = float(compute_mAP(train_binary_image, test_binary_text, train_labels, test_labels))
+    mAP_i_t = float(compute_mAP(train_binary_text, test_binary_image, train_labels, test_labels))
     logger.info('mAP_image_text: %f' % mAP_i_t)
 
-    mAP_t_i = float(compute_mAP(train_binary_text, test_binary_image, train_labels, test_labels))
+    mAP_t_i = float(compute_mAP(train_binary_image, test_binary_text, train_labels, test_labels))
     logger.info('mAP_text_image: %f' % mAP_t_i)
-    
-    avg_mAP = (mAP_i_i + mAP_t_t + mAP_t_i + mAP_i_t) / 4
-    logger.info('avg_mAP: %f' % ((mAP_i_i + mAP_t_t + mAP_t_i + mAP_i_t) / 4))
 
-    return avg_mAP
+    return mAP_i_t, mAP_t_i

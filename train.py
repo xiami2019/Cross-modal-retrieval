@@ -6,6 +6,7 @@ import torch.nn as nn
 import numpy as np
 import random
 import os
+import torch.optim as optim
 from torch.utils.data import DataLoader
 from model import Image_Model, Text_Model
 from dataset import IPAR_TC_12, Iteration
@@ -34,11 +35,13 @@ def get_parser():
                         help='epochs for training')
     parser.add_argument('--eval_only', type=bool_flag, default=False,
                         help='decide to train or evaluate')
-    parser.add_argument('--optimizer', type=str, default='adam_inverse_sqrt,beta1=0.9,beta2=0.98,lr=0.001',
+    parser.add_argument('--optimizer_image', type=str, default='adam_inverse_sqrt,beta1=0.9,beta2=0.98,lr=0.001',
+                        help='choose which optimizer to use')
+    parser.add_argument('--optimizer_text', type=str, default='adam_inverse_sqrt,beta1=0.9,beta2=0.98,lr=0.0001',
                         help='choose which optimizer to use')
     parser.add_argument('--clip_grad_norm', type=float, default=5,
                         help='Clip gradients norm (0 to disable)')
-    parser.add_argument('--code_size', type=int, default=32,
+    parser.add_argument('--code_size', type=int, default=40,
                         help='size of binary code')
     parser.add_argument('--load_model', type=str, default='',
                         help='location of saved model')
@@ -54,6 +57,7 @@ def get_parser():
 def main(params):
 
     logger = initialize_exp(params)
+
     writer = SummaryWriter(os.path.join(params.dump_path, 'runs'))
 
     logger.info('loading %s dataset' % params.dataset_name)
@@ -78,8 +82,10 @@ def main(params):
     Text_encoder.cuda()
 
     #create optimizer
-    image_optimizer = get_optimizer(Image_encoder.parameters(), params.optimizer)
-    text_optimizer = get_optimizer(Text_encoder.parameters(), params.optimizer)
+    image_optimizer = get_optimizer(Image_encoder.parameters(), params.optimizer_image)
+    text_optimizer = get_optimizer(Text_encoder.parameters(), params.optimizer_text)
+    # image_optimizer = optim.Adam(Image_encoder.parameters(), lr=1e-4, weight_decay=0.0005)
+    # text_optimizer = optim.Adam(Text_encoder.parameters(), lr=1e-5, weight_decay=0.0005)
     # optimizer = torch.optim.Adam(training_network.parameters())
     # optimizer = torch.optim.SGD(training_network.parameters(), lr=0.001, momentum=0.9)
 
@@ -104,10 +110,12 @@ def main(params):
                 image_embeddings = Image_encoder(images)
                 text_embeddings = Text_encoder(tokens, segment, mask)
                 triplet_loss_i_i, triplet_loss_t_t, triplet_loss_i_t, triplet_loss_t_i = triplet_hashing_loss(image_embeddings, text_embeddings, labels, margin=params.triplet_margin)
-                logger.info('Batch %i/%i: loss_image_image: %f\t||\tloss_text_text: %f\t||\tloss_image_text: %f\t||\tloss_text_image: %f' % (index + 1, 
-                total_batches, triplet_loss_i_i.item(), triplet_loss_t_t.item(), triplet_loss_i_t.item(), triplet_loss_t_i.item()))
-                total_loss = triplet_loss_i_i + triplet_loss_i_t + triplet_loss_t_i + triplet_loss_i_t
+                total_loss = triplet_loss_i_i + triplet_loss_t_t + triplet_loss_i_t + triplet_loss_t_i
                 total_loss_value += total_loss.item()
+
+                logger.info('Batch %i/%i: total_loss:%f\t||\tloss_image_image: %f\t||\tloss_text_text: %f\t||\tloss_image_text: %f\t||\tloss_text_image: %f' % (index + 1, 
+                total_batches, total_loss.item(), triplet_loss_i_i.item(), triplet_loss_t_t.item(), triplet_loss_i_t.item(), triplet_loss_t_i.item()))
+                
                 total_loss_i_i += triplet_loss_i_i.item()
                 total_loss_t_t += triplet_loss_t_t.item()
                 total_loss_i_t += triplet_loss_i_t.item()
@@ -125,18 +133,18 @@ def main(params):
                 # image_optimizer.step()
                 # text_optimizer.step()
                 # triplet_loss_t_i.backward(retain_graph=False)
-                total_loss.backward()
-                image_optimizer.step()
+                total_loss.backward(retain_graph=False)
                 text_optimizer.step()
+                image_optimizer.step()
 
             logger.info('============ End of epoch %i ============' % epoch)
             
             if epoch % 10 == 0 and epoch != 0:
                 
-                avg_mAP = eval_all(dataloaders['database'], dataloaders['test'], Image_encoder, Text_encoder, params, logger)
+                mAP_i_t, mAP_t_i = eval_all(dataloaders['database'], dataloaders['test'], Image_encoder, Text_encoder, params, logger)
                 
-                if avg_mAP > max_map:
-                    max_map = avg_mAP
+                if mAP_t_i > max_map:
+                    max_map = mAP_t_i
                     save_model(Image_encoder, Text_encoder, params.save_best)
                 save_model(Image_encoder, Text_encoder, params.save_path)
             logger.info('\nEpoch %i: total_avg_loss: %f||\tavg loss_i_i: %f||\tavg loss_t_t: %f||\tavg loss_i_t: %f||\tavg loss_t_i: %f\n' % (epoch, total_loss_value / count, total_loss_i_i / count, total_loss_t_t / count, total_loss_i_t / count, total_loss_t_i / count))
