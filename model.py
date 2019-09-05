@@ -29,7 +29,7 @@ class Text_Model(nn.Module):
     def __init__(self, params, fine_tune_flag=True):
         super(Text_Model, self).__init__()
         config = BertConfig.from_pretrained('bert-base-uncased')
-        self.model = BertModel.from_pretrained('/home/disk1/chengqinyuan/pretrain_bert/bert-base-uncased-pytorch_model.bin', config=config)
+        self.model = BertModel.from_pretrained(params.bertmodel_dir, config=config)
         self.fc = nn.Linear(in_features=768, out_features=params.code_size)
         self.tanh = nn.Tanh()
         for p in self.model.parameters():

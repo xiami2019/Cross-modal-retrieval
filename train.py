@@ -46,7 +46,8 @@ def get_parser():
                         help='margin when calculate triplet loss')
     parser.add_argument('--lang', type=str, default='en',
                         help='choose language of the text')
-
+    parser.add_argument('--params.bertmodel_dir', type=str, default='/home/disk1/chengqinyuan/pretrain_bert/bert-base-uncased-pytorch_model.bin',
+                        help='bert pretrain model location')
     
     return parser
 
@@ -107,10 +108,10 @@ def main(params):
                 total_batches, triplet_loss_i_i.item(), triplet_loss_t_t.item(), triplet_loss_i_t.item(), triplet_loss_t_i.item()))
                 total_loss = triplet_loss_i_i + triplet_loss_i_t + triplet_loss_t_i + triplet_loss_i_t
                 total_loss_value += total_loss.item()
-                # total_loss_i_i += triplet_loss_i_i.item()
-                # total_loss_t_t += triplet_loss_t_t.item()
-                # total_loss_i_t += triplet_loss_i_t.item()
-                # total_loss_t_i += triplet_loss_t_i.item()
+                total_loss_i_i += triplet_loss_i_i.item()
+                total_loss_t_t += triplet_loss_t_t.item()
+                total_loss_i_t += triplet_loss_i_t.item()
+                total_loss_t_i += triplet_loss_t_i.item()
 
                 count +=1 
                 # writer.add_scalar('train_image_image', triplet_loss.item(), index + epoch * params.batch_size)
