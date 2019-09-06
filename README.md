@@ -25,6 +25,7 @@ language | 16bits | 32bits | 48bits | 64bits
 `German` | **To be added** | **0.4514** | **To be added** | **To be added**  
 
 Images→Text  
+
 language | 16bits | 32bits | 48bits | 64bits  
 |:---: |:---: |:---: | :---: |:---: |  
 `English` | **To be added** | **0.4533** | **To be added** | **To be added**  
