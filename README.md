@@ -2,8 +2,8 @@
 By Xiami2019
 
 ## Dataset  
-Images and text are from 'iaprtc-12'https://www.imageclef.org/photodata  
-Labels are from 'saiaprtc-12'https://www.imageclef.org/SIAPRdata  
+Images and text are from `iaprtc-12``https://www.imageclef.org/photodata`  
+Labels are from `saiaprtc-12``https://www.imageclef.org/SIAPRdata`  
 And make a mixture dataset for cross-modal retrieve by simply concatenate the labels, images, text.  
 In this dataset, we have 20000 images and their corresponding description both in English and German.  
 There are also multi labels for each image-text pair.
