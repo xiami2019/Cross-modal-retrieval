@@ -15,7 +15,7 @@ The network consists of image model and text model. I use CNN networks pretraine
 
 ## Objective
 Final objective consists of four triplet losses：  
-F=L_{I\rightarrow T}+L_{T\rightarrow I}+L_{T\rightarrow T}+L_{I\rightarrow I}
+<a href="https://www.codecogs.com/eqnedit.php?latex=F=L_{I\rightarrow&space;T}&plus;L_{T\rightarrow&space;I}&plus;L_{T\rightarrow&space;T}&plus;L_{I\rightarrow&space;I}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?F=L_{I\rightarrow&space;T}&plus;L_{T\rightarrow&space;I}&plus;L_{T\rightarrow&space;T}&plus;L_{I\rightarrow&space;I}" title="F=L_{I\rightarrow T}+L_{T\rightarrow I}+L_{T\rightarrow T}+L_{I\rightarrow I}" /></a>
 
 ## Result:  
 Due to time and devices limited, extensive experient has not been executed.
