@@ -18,6 +18,7 @@ F=L_{I\rightarrow T}+L_{T\rightarrow I}+L_{T\rightarrow T}+L_{I\rightarrow I}
 ## Result:  
 After 200 epoch  
 Text→Images  
+
 language | 16bits | 32bits | 48bits | 64bits  
 |:---: |:---: |:---: | :---: |:---: |  
 `English` | **To be added** | **0.4583** | **To be added** | **To be added**  
