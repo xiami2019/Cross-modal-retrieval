@@ -31,7 +31,7 @@ def get_parser():
                         help='batch_size for training')
     parser.add_argument('--root', type=str, default='/home/disk1/chengqinyuan/datasets',
                         help='location of data')
-    parser.add_argument('--epochs', type=int, default=1000,
+    parser.add_argument('--epochs', type=int, default=2000,
                         help='epochs for training')
     parser.add_argument('--eval_only', type=bool_flag, default=False,
                         help='decide to train or evaluate')
@@ -139,7 +139,7 @@ def main(params):
 
             logger.info('============ End of epoch %i ============' % epoch)
             
-            if epoch % 10 == 0 and epoch != 0:
+            if epoch % 100 == 0:
                 
                 mAP_i_t, mAP_t_i = eval_all(dataloaders['database'], dataloaders['test'], Image_encoder, Text_encoder, params, logger)
                 
