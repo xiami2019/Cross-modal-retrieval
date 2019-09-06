@@ -35,4 +35,4 @@ language | 16bits | 32bits | 48bits | 64bits
 `German` | **To be added** | **0.4421** | **To be added** | **To be added**  
 
 ## Reference  
-[1]Xi Zhang, Hanjiang Lai, Jiashi Feng[*Attention-aware Deep Adversarial Hashing for Cross-Modal Retrieval*](http://openaccess.thecvf.com/content_ECCV_2018/papers/Xi_Zhang_Attention-aware_Deep_Adversarial_ECCV_2018_paper.pdf)
+[1]Xi Zhang, Hanjiang Lai, Jiashi Feng [*Attention-aware Deep Adversarial Hashing for Cross-Modal Retrieval*](http://openaccess.thecvf.com/content_ECCV_2018/papers/Xi_Zhang_Attention-aware_Deep_Adversarial_ECCV_2018_paper.pdf)
