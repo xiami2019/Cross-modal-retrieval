@@ -17,7 +17,7 @@ The network consists of image model and text model. I use CNN networks pretraine
 Final objective consists of four triplet losses：  
 <a href="https://www.codecogs.com/eqnedit.php?latex=F=L_{I\rightarrow&space;T}&plus;L_{T\rightarrow&space;I}&plus;L_{T\rightarrow&space;T}&plus;L_{I\rightarrow&space;I}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?F=L_{I\rightarrow&space;T}&plus;L_{T\rightarrow&space;I}&plus;L_{T\rightarrow&space;T}&plus;L_{I\rightarrow&space;I}" title="F=L_{I\rightarrow T}+L_{T\rightarrow I}+L_{T\rightarrow T}+L_{I\rightarrow I}" /></a>
 
-## Result:  
+## Result   
 Due to time and devices limited, extensive experient has not been executed.  
 After 200 epoch  
 **Text→Images**  
@@ -33,3 +33,6 @@ language | 16bits | 32bits | 48bits | 64bits
 |:---: |:---: |:---: | :---: |:---: |  
 `English` | **To be added** | **0.4533** | **To be added** | **To be added**  
 `German` | **To be added** | **0.4421** | **To be added** | **To be added**  
+
+## Reference  
+[1]Xi Zhang, Hanjiang Lai, Jiashi Feng[*Attention-aware Deep Adversarial Hashing for Cross-Modal Retrieval*](http://openaccess.thecvf.com/content_ECCV_2018/papers/Xi_Zhang_Attention-aware_Deep_Adversarial_ECCV_2018_paper.pdf)
