@@ -1,6 +1,11 @@
 # Cross-modal-retrieve
 By Xiami2019
 
+## Requirements
+Python 3.6  
+PyTorch 1.1.0  
+pytorch-transformers  
+
 ## Dataset  
 Images and text are from `iaprtc-12` https://www.imageclef.org/photodata  
 Labels are from `saiaprtc-12` https://www.imageclef.org/SIAPRdata  
