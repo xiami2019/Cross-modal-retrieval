@@ -20,14 +20,14 @@ Final objective consists of four triplet losses：
 ## Result:  
 Due to time and devices limited, extensive experient has not been executed.  
 After 200 epoch  
-Text→Images  
+**Text→Images**  
 
 language | 16bits | 32bits | 48bits | 64bits  
 |:---: |:---: |:---: | :---: |:---: |  
 `English` | **To be added** | **0.4583** | **To be added** | **To be added**  
 `German` | **To be added** | **0.4514** | **To be added** | **To be added**  
 
-Images→Text  
+**Images→Text**  
 
 language | 16bits | 32bits | 48bits | 64bits  
 |:---: |:---: |:---: | :---: |:---: |  
