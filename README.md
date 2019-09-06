@@ -11,7 +11,7 @@ Follow the setting in reference paper, I choose 10000 images as train set.
 When testing, I choose 2000 images as query set and the last 18000 images as database.
 
 ## Model
-The network consists of image model and text model. I use CNN networks pretrained Resnet18 as the image model and pretrained BERT-base as the text model.
+The network consists of image model and text model. I use pretrained **Resnet18** as the image model and pretrained **BERT-base** as the text model.
 
 ## Objective
 Final objective consists of four triplet losses：  
